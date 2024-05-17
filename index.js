@@ -177,6 +177,4 @@ async function search(query) {
   };
 }
 
-// sources (title, favicon, url, name) - Array of source objects
-// answer - string
-// relatedQueries - Array of strings
+
