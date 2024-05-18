@@ -93,7 +93,7 @@ async function extractContextFromResultsWithRAG(query, searchResults) {
     .join("");
 }
 
-async function extractContextFromResultsWithoutRAG(query, searchResults) {
+async function extractContextFromResultsWithoutRAG(searchResults) {
   const getRelevantContext = async (source) => {
     const content = await getPageContent(source.url);
     return content;
@@ -101,11 +101,11 @@ async function extractContextFromResultsWithoutRAG(query, searchResults) {
 
   const promises = searchResults.map((source) => getRelevantContext(source));
 
-  const result = await Promise.all(promises);
+  const result = await Promise.allSettled(promises);
 
   return result
-    .filter((res) => res)
-    .map((context) => `${context.trim()}---\n`)
+    .filter((res) => res.status === "fulfilled")
+    .map((res) => `${res.value.trim()}---\n`)
     .join("");
 }
 
